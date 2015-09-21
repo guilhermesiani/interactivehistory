@@ -1,0 +1,16 @@
+{
+    "name": "guilhermesiani/interactivehistory",
+    "type": "symfony-application",
+    "require": {
+        "phpunit/phpunit": "~4.8",
+        "symfony/symfony": "dev-master"
+    },
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Guilherme Siani",
+            "email": "guilherme@siani.com.br"
+        }
+    ],
+    "minimum-stability": "alpha"
+}
