@@ -12,5 +12,10 @@
             "email": "guilherme@siani.com.br"
         }
     ],
-    "minimum-stability": "alpha"
+    "minimum-stability": "alpha",
+    "autoload": {
+        "psr-0":  {
+            "": "src/"
+        }
+    }
 }
