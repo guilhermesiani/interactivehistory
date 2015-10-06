@@ -5,7 +5,7 @@ namespace Interactivehistory\Entity;
 /**
 * 
 */
-class History
+class InteractiveHistory
 {
 	
 	
