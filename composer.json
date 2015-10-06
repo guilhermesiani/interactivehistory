@@ -2,7 +2,7 @@
     "name": "guilhermesiani/interactivehistory",
     "type": "symfony-application",
     "require": {
-        "phpunit/phpunit": "~4.8",
+        "phpunit/phpunit": "^5.0",
         "symfony/symfony": "dev-master"
     },
     "license": "GPL-3.0",
