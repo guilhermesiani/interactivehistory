@@ -1,6 +1,6 @@
 <?php
 
-use Interactivehistory\Entity\InteractiveHistory;
+use InteractiveHistory\Entity\InteractiveHistory;
 
 class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,13 +10,13 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	public function assertPreConditions()
 	{
 		$this->assertTrue(
-			class_exists($class = 'Interactivehistory\Entity\InteractiveHistory'),
+			class_exists($class = 'InteractiveHistory\Entity\InteractiveHistory'),
 			'Class not found: '.$class
 		);
 	}
 
 	/**
-	 * expectedException Exception
+	 * @expectedException TypeError
 	 */
 	public function testInstantiationWithoutArgumentsShouldThrowAnException()
 	{
@@ -24,81 +24,71 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * expectedException Exception
+	 * @expectedException TypeError
 	 */
 	public function testInstantiationWithAnInvalidArgumentShouldThrowAnException()
 	{
 		$instance = new InteractiveHistory(2);
 	}	
 
-	/**
-	 * expectedException Exception
-	 */
 	public function testInstantiationWithAnInstanceOfHistoryOnConstructShouldWork()
 	{
-		$history = $this->getMockBuilder('History')->getMock();
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
 		$instance = new InteractiveHistory($history);
 	}	
 
 	public function testSetTitleWithValidArgumentShouldWork()
 	{
-		$history = $this->getMockBuilder('History')->getMock();
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
 
 		$instance = new InteractiveHistory($history);
 		$title 	  = 'Título da história';
 		$return   = $instance->setTitle($title);
-		$this->assertInstanceOf(
-			'Interactivehistory\Entity\InteractiveHistory',
-			$return
-		);
 		$this->assertEquals($title, $instance->getTitle());
 	}
 
 	public function testGetContentShouldReturnAText()
 	{
-		$history = $this->getMockBuilder('History')->getMock();
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
 
 		$dilmasHistory = [];
 		$dilmasHistory[] = [
-			'Se hoje é o dia das crianças... Ontem eu disse: o dia da criança é o dia da mãe, 
+			1 => 'Se hoje é o dia das crianças... Ontem eu disse: o dia da criança é o dia da mãe, 
 			dos pais, das professoras, mas também é o dia dos animais, sempre que você olha 
 			uma criança, há sempre uma figura oculta, que é um cachorro atrás. O que é algo 
-			muito importante!',
-			'Eu dou dinheiro pra minha filha. Eu dou dinheiro pra ela viajar, então é... é... 
-			Já vivi muito sem dinheiro, já vivi muito com dinheiro.'
+			muito importante!'
 		];
 
-		$history->method('offsetGet')->will($this->onConsecutiveCalls(
-			$dilmasHistory[0][0],
-			$dilmasHistory[0][1]
-		));
+		$history->method('offsetExists')->willReturn(true);
+		$history->method('offsetGet')->willReturn([1 => $dilmasHistory[0][1]]);
 
 		$interactiveHistory = new InteractiveHistory($history);
-		$this->assertInternalType('string', $interactiveHistory->getContent(0, 0));
-		$this->assertEquals($dilmasHistory[0][0], $interactiveHistory->getContent(0, 0));
 		$this->assertInternalType('string', $interactiveHistory->getContent(0, 1));
 		$this->assertEquals($dilmasHistory[0][1], $interactiveHistory->getContent(0, 1));		
 	}
 
-	public function testGetUndefinedOffsetShouldReturnEmptyString()
+	/**
+	 * @expectedException OutOfRangeException
+	 */
+	public function testGetUndefinedOffsetShouldThrowOutOfRangeException()
 	{
-		$history = $this->getMockBuilder('History')->getMock();
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
 
 		$history->method('offsetExists')->will($this->onConsecutiveCalls(false));
 
 		$interactiveHistory = new InteractiveHistory($history);
-		$this->assertInternalType('string', $interactiveHistory->getContent(0, 0));
-		$this->assertEquals('', $interactiveHistory->getContent(0, 0));
+		echo $interactiveHistory->getContent(0, 0);
 	}
 
 	public function testGetLastOffsetShouldReturnStringTheEnd()
 	{
-		$history = $this->getMockBuilder('History')->getMock();
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
 
 		$content = [];
 		$content[] = ['The end'];
 
-		$history->method('offsetGet')->willReturn($content[0][0]);
+		$history->method('offsetExists')->willReturn(true);
+		$history->method('offsetGet')->willReturn([0 => $content[0][0]]);
 
 		$interactiveHistory = new InteractiveHistory($history);
 		$this->assertInternalType('string', $interactiveHistory->getContent(0, 0));
@@ -107,26 +97,26 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testInstantiationShouldStartWithOneHorizontalAndVerticalPosition()
 	{
-		$history = $this->getMockBuilder('History')->getMock();
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
 		$instance = new InteractiveHistory($history);
 
 		$this->assertInternalType('int', $instance->getHorizontalPosition());			
-		$this->assertEquals(1, $instance->getHorizontalPosition());
+		$this->assertEquals(0, $instance->getHorizontalPosition());
 		$this->assertInternalType('int', $instance->getVerticalPosition());			
-		$this->assertEquals(1, $instance->getVerticalPosition());
+		$this->assertEquals(0, $instance->getVerticalPosition());
 	}	
 
 	public function testMoveForwardShouldSetNextIndexOfVerticalPosition()
 	{
-		$history = $this->getMockBuilder('History')->getMock();
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
 		$instance = new InteractiveHistory($history); // Starts with index 1 on VerticalPosition
 
 		$instance->moveForward();
 		$this->assertInternalType('int', $instance->getVerticalPosition());			
-		$this->assertEquals(2, $instance->getVerticalPosition());	
+		$this->assertEquals(1, $instance->getVerticalPosition());	
 
 		$instance->moveForward();
 		$this->assertInternalType('int', $instance->getVerticalPosition());			
-		$this->assertEquals(3, $instance->getVerticalPosition());		
+		$this->assertEquals(2, $instance->getVerticalPosition());		
 	}	
 }
