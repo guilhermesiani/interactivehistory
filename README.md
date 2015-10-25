@@ -6,4 +6,3 @@ Ferramentas
 1. PHP 7
 2. PostgreSQL
 3. PHPUnit ^5.0
-4. Symfony ^3.0
