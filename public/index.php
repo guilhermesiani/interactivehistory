@@ -1,7 +1,9 @@
 <?php
 
-use InteractiveHistory\Entity\InteractiveHistory;
 use History\Entity\History;
+use InteractiveHistory\Entity\InteractiveHistory;
+use Connector\Entity\PDOConnector;
+use Connector\Entity\DBConnectorConfig\PostgreSQLConnectorConfig;
 
 include 'bootstrap.php';
 
@@ -16,3 +18,15 @@ if (isset($history->offsetGet(0)[2])) {
 $interactiveHistory = new InteractiveHistory($history);
 
 echo $interactiveHistory->getContent(0, 1).PHP_EOL;
+
+$connectorConf = new PostgreSQLConnectorConfig(
+	'localhost', 
+	'interactivehistory', 
+	'guilhermesiani', 
+	''
+);
+
+$db = (new PDOConnector($connectorConf))->getConnection();
+
+$sth = $db->query('SELECT * FROM history_content');
+print_r($sth->fetchAll(PDO::FETCH_ASSOC));
