@@ -11,8 +11,9 @@ class InteractiveHistory implements InteractiveHistoryInterface
 {
 	private $title;
 	private $history;
-	private $vPosition = 0;
-	private $hPosition = 0;
+	private $verticalPosition = 0;
+	private $horizontalPosition = 0;
+	private $availablePositions = [];
 
 	public function __construct(History $history)
 	{
@@ -29,34 +30,34 @@ class InteractiveHistory implements InteractiveHistoryInterface
 		return $this->title;
 	}
 
-	public function getContent(int $vPosition, int $hPosition): string
+	public function getContent(int $verticalPosition, int $horizontalPosition): string
 	{
-		if (!$this->history->offsetExists($vPosition))
+		if (!$this->history->offsetExists($verticalPosition))
 			throw new \OutOfRangeException('History page not found');
 
-		if (!isset($this->history->offsetGet($vPosition)[$hPosition]))
+		if (!isset($this->history->offsetGet($verticalPosition)[$horizontalPosition]))
 			throw new \OutOfRangeException('History variant page not found');
 
-		return $this->history->offsetGet($vPosition)[$hPosition];
+		return $this->history->offsetGet($verticalPosition)[$horizontalPosition];
 	}
 	
 	public function moveForward()
 	{
-		$this->vPosition++;
+		$this->verticalPosition++;
 	}
 	
-	public function setHorizontalPosition(int $hPosition)
+	public function setHorizontalPosition(int $horizontalPosition)
 	{
-		$this->hPosition = $hPosition;
+		$this->horizontalPosition = $horizontalPosition;
 	}
 	
-	public function getHorizontalPosition()
+	private function getHorizontalPosition()
 	{
-		return $this->hPosition;
+		return $this->horizontalPosition;
 	}
 
 	public function getVerticalPosition()
 	{
-		return $this->vPosition;
+		return $this->verticalPosition;
 	}
 }
