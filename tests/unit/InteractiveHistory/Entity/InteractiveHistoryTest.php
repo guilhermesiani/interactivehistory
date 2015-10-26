@@ -63,8 +63,9 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$history->method('offsetGet')->willReturn([1 => $dilmasHistory[0][1]]);
 
 		$interactiveHistory = new InteractiveHistory($history);
-		$this->assertInternalType('string', $interactiveHistory->getContent(0, 1));
-		$this->assertEquals($dilmasHistory[0][1], $interactiveHistory->getContent(0, 1));		
+		$interactiveHistory->moveForward(1);
+		$this->assertInternalType('string', $interactiveHistory->getContent());
+		$this->assertEquals($dilmasHistory[0][1], $interactiveHistory->getContent());		
 	}
 
 	/**
@@ -104,19 +105,172 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(0, $instance->getHorizontalPosition());
 		$this->assertInternalType('int', $instance->getVerticalPosition());			
 		$this->assertEquals(0, $instance->getVerticalPosition());
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testMoveForwardWithInvalidTypeArgumentShouldThrowAnException()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
+
+		$instance->moveForward('bla');
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testMoveBackwardWithInvalidTypeArgumentShouldThrowAnException()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
+
+		$instance->moveBackward('bla');
+	}	
+
+	public function testMoveForwardShouldReceiveIntArgumentAsHorizontalPosition()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
+
+		$instance->moveForward(1);
+		$this->assertInternalType('int', $instance->getHorizontalPosition());			
+		$this->assertEquals(1, $instance->getHorizontalPosition());		
+	}
+
+	public function testMoveBackwardShouldReceiveIntArgumentAsHorizontalPosition()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
+
+		$instance->moveForward(1);
+		$instance->moveBackward(1);
+		$this->assertInternalType('int', $instance->getHorizontalPosition());			
+		$this->assertEquals(0, $instance->getHorizontalPosition());		
 	}	
 
 	public function testMoveForwardShouldSetNextIndexOfVerticalPosition()
 	{
 		$history = $this->getMockBuilder('History\Entity\History')->getMock();
-		$instance = new InteractiveHistory($history); // Starts with index 1 on VerticalPosition
+		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
 
-		$instance->moveForward();
+		$instance->moveForward(0);
 		$this->assertInternalType('int', $instance->getVerticalPosition());			
 		$this->assertEquals(1, $instance->getVerticalPosition());	
 
-		$instance->moveForward();
+		$instance->moveForward(0);
 		$this->assertInternalType('int', $instance->getVerticalPosition());			
 		$this->assertEquals(2, $instance->getVerticalPosition());		
+	}
+
+	public function testMoveBackwardShouldSetPreviousIndexOfVerticalPosition()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$instance = new InteractiveHistory($history);
+
+		$instance->moveForward(0);
+		$this->assertInternalType('int', $instance->getVerticalPosition());			
+		$this->assertEquals(1, $instance->getVerticalPosition());	
+
+		$instance->moveBackward(0);
+		$this->assertInternalType('int', $instance->getVerticalPosition());			
+		$this->assertEquals(0, $instance->getVerticalPosition());		
+	}	
+
+	public function testSetPageOptionWithValidArgumentsForExistingPageShouldWork()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history->offsetSet(1, 'Some valid argument');
+		$instance = new InteractiveHistory($history);
+
+		$optionsText = [
+			'Some option to horizontal position',
+			'Another option',
+		];
+
+		$instance->setPageOption(1, 0, $optionsText[0]);
+		$instance->setPageOption(1, 1, $optionsText[1]);
+		$this->assertEquals($optionsText[0], $instance->getPageOption(1, 0));
+		$this->assertEquals($optionsText[1], $instance->getPageOption(1, 1));
+	}	
+
+	public function testGetPageOptionsShouldReturnValidArrayAndKeys()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history->offsetSet(1, 'Some valid argument');
+		$instance = new InteractiveHistory($history);
+
+		$optionsText = [
+			'Some option to horizontal position',
+			'Another option',
+		];
+
+		$instance->setPageOption(1, 0, $optionsText[0]);
+		$instance->setPageOption(1, 1, $optionsText[1]);
+		$this->assertArrayHasKey('nextHorizontalPosition', $instance->getPageOptions(1)[0]);
+		$this->assertArrayHasKey('optionText', $instance->getPageOptions(1)[0]);
+	}
+
+	public function testHasOptionsForExistingPageShouldReturnTrueOrFalse()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history->offsetSet(0, 'Some valid argument');
+		$history->offsetSet(1, 'Another valid argument');
+		$instance = new InteractiveHistory($history);
+		$instance->setPageOption(1, 0, 'Some option');
+
+		$this->assertInternalType('bool', $instance->pageHasOption(0));
+		$this->assertInternalType('bool', $instance->pageHasOption(1));
+		$this->assertFalse($instance->pageHasOption(0));
+		$this->assertTrue($instance->pageHasOption(1));
+	}
+
+	/**
+	 * @expectedException OutOfRangeException
+	 */
+	public function testGetOptionWithNonExistingValueShouldThrowAnException()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$instance = new InteractiveHistory($history);
+		$instance->getOption(0, 0);
+	}
+
+	public function testMoveForwardWhenThereIsNoNextVerticalPositionShouldStayInTheSamePosition()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+
+		$dilmasHistory = [];
+		$dilmasHistory[] = [0 => 'Eu dou dinheiro pra minha filha.'];
+		$dilmasHistory[] = [1 => 'The end'];
+
+		$history->method('offsetGet')->will($this->onConsecutiveCalls(
+			$dilmasHistory[0][0], 
+			$dilmasHistory[1][1]
+		));
+
+		$instance = new InteractiveHistory($history);
+		$instance->moveForward(0);	
+		$instance->moveForward(0);	
+		$instance->moveForward(0);
+
+		$this->assertEquals(1, $instance->getVerticalPosition());	
+		$this->assertEquals($dilmasHistory[1][1], $instance->getContent());	
+	}
+
+	public function testMoveBackwardWhenThereIsNoPreviousVerticalPositionShouldStayInTheSamePosition()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+
+		$dilmasHistory = [];
+		$dilmasHistory[] = [0 => 'Coloca esse dinheiro na poupança que a senhora ganha R$10 mil por mês'];
+
+		$history->method('offsetGet')->willReturn($dilmasHistory[0][0]);
+
+		$instance = new InteractiveHistory($history);
+		$instance->moveBackward(0);
+		
+		$this->assertEquals(0, $instance->getVerticalPosition());		
+		$this->assertEquals($dilmasHistory[0][0], $instance->getContent());	
 	}	
 }

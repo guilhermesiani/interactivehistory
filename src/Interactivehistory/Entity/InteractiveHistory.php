@@ -13,7 +13,18 @@ class InteractiveHistory implements InteractiveHistoryInterface
 	private $history;
 	private $verticalPosition = 0;
 	private $horizontalPosition = 0;
-	private $availablePositions = [];
+	private $pageOptions = [];
+
+	// 	$arr = [
+	// 	0 => null, 
+	// 	1 => [
+	// 		0 => ['nextHorizontalPosition' => 0, 'optionText' => 'Some direction to select'], 
+	// 		1 => ['nextHorizontalPosition' => 1, 'optionText' => 'Another direction']
+	// 	], 
+	// 	2 => null, 
+	// 	3 => null, 
+	// 	4 => null
+	// ];
 
 	public function __construct(History $history)
 	{
@@ -30,34 +41,54 @@ class InteractiveHistory implements InteractiveHistoryInterface
 		return $this->title;
 	}
 
-	public function getContent(int $verticalPosition, int $horizontalPosition): string
+	public function getContent(): string
 	{
-		if (!$this->history->offsetExists($verticalPosition))
+		if (!$this->history->offsetExists($this->verticalPosition))
 			throw new \OutOfRangeException('History page not found');
 
-		if (!isset($this->history->offsetGet($verticalPosition)[$horizontalPosition]))
+		if (!isset($this->history->offsetGet($this->verticalPosition)[$this->horizontalPosition]))
 			throw new \OutOfRangeException('History variant page not found');
 
-		return $this->history->offsetGet($verticalPosition)[$horizontalPosition];
+		return $this->history->offsetGet($this->verticalPosition)[$this->horizontalPosition];
 	}
 	
-	public function moveForward()
+	public function moveForward(int $horizontalPosition)
 	{
+		$this->horizontalPosition = $horizontalPosition;		
 		$this->verticalPosition++;
 	}
-	
-	public function setHorizontalPosition(int $horizontalPosition)
+
+	public function moveBackward(int $horizontalPosition)
 	{
-		$this->horizontalPosition = $horizontalPosition;
+
 	}
-	
-	private function getHorizontalPosition()
+
+	public function getHorizontalPosition()
 	{
-		return $this->horizontalPosition;
+
 	}
 
 	public function getVerticalPosition()
 	{
-		return $this->verticalPosition;
+
 	}
+
+	public function setPageOption(int $page, int $nextHorizontalPosition, string $optionText)
+	{
+		$this->pageOptions[$page][] = [
+			'nextHorizontalPosition' 	=> $nextHorizontalPosition,
+			'optionText' 				=> $optionText,
+		];
+	}
+
+	public function getPageOption(int $page, int $option)
+	{
+		return $this->pageOptions[$page][$option];
+	}
+
+	public function getPageOptions()
+	{
+
+	}	
 }
+

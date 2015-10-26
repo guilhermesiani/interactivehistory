@@ -6,9 +6,12 @@ interface InteractiveHistoryInterface
 {
 	public function setTitle(string $title);
 	public function getTitle(): string;
-	public function getContent(int $vPosition, int $hPosition): string;
-	public function moveForward();
-	public function setHorizontalPosition(int $hPosition);
+	public function getContent(): string;
+	public function moveForward(int $horizontalPosition);
+	public function moveBackward(int $horizontalPosition);
 	public function getHorizontalPosition();
 	public function getVerticalPosition();
+	public function setPageOption();
+	public function getPageOption(int $page, int $option);
+	public function getPageOptions();
 }
