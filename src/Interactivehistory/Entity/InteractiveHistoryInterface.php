@@ -9,9 +9,10 @@ interface InteractiveHistoryInterface
 	public function getContent(): string;
 	public function moveForward(int $horizontalPosition);
 	public function moveBackward(int $horizontalPosition);
-	public function getHorizontalPosition();
-	public function getVerticalPosition();
-	public function setPageOption();
-	public function getPageOption(int $page, int $option);
-	public function getPageOptions();
+	public function getHorizontalPosition(): int;
+	public function getVerticalPosition(): int;
+	public function setPageOption(int $page, int $nextHorizontalPosition, string $optionText);
+	public function getPageOption(int $page, int $option): array;
+	public function getPageOptions(): array;
+	public function pageHasOptions(int $page): bool;
 }

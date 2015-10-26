@@ -107,52 +107,10 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(0, $instance->getVerticalPosition());
 	}
 
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testMoveForwardWithInvalidTypeArgumentShouldThrowAnException()
-	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
-		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
-
-		$instance->moveForward('bla');
-	}
-
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
-	public function testMoveBackwardWithInvalidTypeArgumentShouldThrowAnException()
-	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
-		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
-
-		$instance->moveBackward('bla');
-	}	
-
-	public function testMoveForwardShouldReceiveIntArgumentAsHorizontalPosition()
-	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
-		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
-
-		$instance->moveForward(1);
-		$this->assertInternalType('int', $instance->getHorizontalPosition());			
-		$this->assertEquals(1, $instance->getHorizontalPosition());		
-	}
-
-	public function testMoveBackwardShouldReceiveIntArgumentAsHorizontalPosition()
-	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
-		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
-
-		$instance->moveForward(1);
-		$instance->moveBackward(1);
-		$this->assertInternalType('int', $instance->getHorizontalPosition());			
-		$this->assertEquals(0, $instance->getHorizontalPosition());		
-	}	
-
 	public function testMoveForwardShouldSetNextIndexOfVerticalPosition()
 	{
 		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history->method('offsetExists')->will($this->onConsecutiveCalls([true, true]));
 		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
 
 		$instance->moveForward(0);
@@ -191,11 +149,11 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 		$instance->setPageOption(1, 0, $optionsText[0]);
 		$instance->setPageOption(1, 1, $optionsText[1]);
-		$this->assertEquals($optionsText[0], $instance->getPageOption(1, 0));
-		$this->assertEquals($optionsText[1], $instance->getPageOption(1, 1));
+		$this->assertEquals($optionsText[0], $instance->getPageOption(1, 0)['optionText']);
+		$this->assertEquals($optionsText[1], $instance->getPageOption(1, 1)['optionText']);
 	}	
 
-	public function testGetPageOptionsShouldReturnValidArrayAndKeys()
+	public function testGetPageOptionShouldReturnValidArrayAndKeys()
 	{
 		$history = $this->getMockBuilder('History\Entity\History')->getMock();
 		$history->offsetSet(1, 'Some valid argument');
@@ -208,8 +166,8 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 		$instance->setPageOption(1, 0, $optionsText[0]);
 		$instance->setPageOption(1, 1, $optionsText[1]);
-		$this->assertArrayHasKey('nextHorizontalPosition', $instance->getPageOptions(1)[0]);
-		$this->assertArrayHasKey('optionText', $instance->getPageOptions(1)[0]);
+		$this->assertArrayHasKey('nextHorizontalPosition', $instance->getPageOption(1, 0));
+		$this->assertArrayHasKey('optionText', $instance->getPageOption(1, 1));
 	}
 
 	public function testHasOptionsForExistingPageShouldReturnTrueOrFalse()
@@ -220,10 +178,10 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$instance = new InteractiveHistory($history);
 		$instance->setPageOption(1, 0, 'Some option');
 
-		$this->assertInternalType('bool', $instance->pageHasOption(0));
-		$this->assertInternalType('bool', $instance->pageHasOption(1));
-		$this->assertFalse($instance->pageHasOption(0));
-		$this->assertTrue($instance->pageHasOption(1));
+		$this->assertInternalType('bool', $instance->pageHasOptions(0));
+		$this->assertInternalType('bool', $instance->pageHasOptions(1));
+		$this->assertFalse($instance->pageHasOptions(0));
+		$this->assertTrue($instance->pageHasOptions(1));
 	}
 
 	/**
@@ -233,7 +191,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	{
 		$history = $this->getMockBuilder('History\Entity\History')->getMock();
 		$instance = new InteractiveHistory($history);
-		$instance->getOption(0, 0);
+		$instance->getPageOption(0, 0);
 	}
 
 	public function testMoveForwardWhenThereIsNoNextVerticalPositionShouldStayInTheSamePosition()
@@ -250,7 +208,6 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		));
 
 		$instance = new InteractiveHistory($history);
-		$instance->moveForward(0);	
 		$instance->moveForward(0);	
 		$instance->moveForward(0);
 

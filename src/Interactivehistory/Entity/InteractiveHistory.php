@@ -54,23 +54,32 @@ class InteractiveHistory implements InteractiveHistoryInterface
 	
 	public function moveForward(int $horizontalPosition)
 	{
-		$this->horizontalPosition = $horizontalPosition;		
-		$this->verticalPosition++;
+		$this->horizontalPosition = $horizontalPosition;
+
+		$nextPosition = $this->verticalPosition + 1;
+
+		if ($this->history->offsetExists($nextPosition))		
+			$this->verticalPosition = $nextPosition;
 	}
 
 	public function moveBackward(int $horizontalPosition)
 	{
+		$this->horizontalPosition = $horizontalPosition;
 
+		$previousPosition = $this->verticalPosition - 1;
+
+		if ($this->history->offsetExists($previousPosition))		
+			$this->verticalPosition = $previousPosition;
 	}
 
-	public function getHorizontalPosition()
+	public function getHorizontalPosition(): int
 	{
-
+		return $this->horizontalPosition;
 	}
 
-	public function getVerticalPosition()
+	public function getVerticalPosition(): int
 	{
-
+		return $this->verticalPosition;
 	}
 
 	public function setPageOption(int $page, int $nextHorizontalPosition, string $optionText)
@@ -81,14 +90,25 @@ class InteractiveHistory implements InteractiveHistoryInterface
 		];
 	}
 
-	public function getPageOption(int $page, int $option)
+	public function getPageOption(int $page, int $option): array
 	{
+		if (!isset($this->pageOptions[$page][$option]))
+			throw new OutOfRangeException('This page has no options to choose for the next horizontal page');
+
 		return $this->pageOptions[$page][$option];
 	}
 
-	public function getPageOptions()
+	public function getPageOptions(): array
 	{
 
+	}	
+
+	public function pageHasOptions(int $page): bool
+	{
+		if (!empty($this->pageOptions[$page]))
+			return true;
+
+		return false;
 	}	
 }
 
