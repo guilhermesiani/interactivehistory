@@ -60,7 +60,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		];
 
 		$history->method('offsetExists')->willReturn(true);
-		$history->method('offsetGet')->willReturn([1 => $dilmasHistory[0][1]]);
+		$history->method('offsetGet')->willReturn($dilmasHistory[0]);
 
 		$interactiveHistory = new InteractiveHistory($history);
 		$interactiveHistory->moveForward(1);
@@ -89,7 +89,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$content[] = ['The end'];
 
 		$history->method('offsetExists')->willReturn(true);
-		$history->method('offsetGet')->willReturn([0 => $content[0][0]]);
+		$history->method('offsetGet')->willReturn($content[0]);
 
 		$interactiveHistory = new InteractiveHistory($history);
 		$this->assertInternalType('string', $interactiveHistory->getContent(0, 0));
@@ -110,21 +110,20 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	public function testMoveForwardShouldSetNextIndexOfVerticalPosition()
 	{
 		$history = $this->getMockBuilder('History\Entity\History')->getMock();
-		$history->method('offsetExists')->will($this->onConsecutiveCalls([true, true]));
+		$history->method('offsetExists')->will($this->onConsecutiveCalls(true, true));
 		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
 
 		$instance->moveForward(0);
 		$this->assertInternalType('int', $instance->getVerticalPosition());			
 		$this->assertEquals(1, $instance->getVerticalPosition());	
-
-		$instance->moveForward(0);
-		$this->assertInternalType('int', $instance->getVerticalPosition());			
+		$instance->moveForward(0);	
 		$this->assertEquals(2, $instance->getVerticalPosition());		
 	}
 
 	public function testMoveBackwardShouldSetPreviousIndexOfVerticalPosition()
 	{
 		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history->method('offsetExists')->will($this->onConsecutiveCalls(true, true));		
 		$instance = new InteractiveHistory($history);
 
 		$instance->moveForward(0);
@@ -199,20 +198,17 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$history = $this->getMockBuilder('History\Entity\History')->getMock();
 
 		$dilmasHistory = [];
-		$dilmasHistory[] = [0 => 'Eu dou dinheiro pra minha filha.'];
-		$dilmasHistory[] = [1 => 'The end'];
+		$dilmasHistory[] = [0 => 'The end'];
 
-		$history->method('offsetGet')->will($this->onConsecutiveCalls(
-			$dilmasHistory[0][0], 
-			$dilmasHistory[1][1]
-		));
+		$history->method('offsetExists')->will($this->onConsecutiveCalls(true, false, true));	
+		$history->method('offsetGet')->willReturn($dilmasHistory[0]);
 
 		$instance = new InteractiveHistory($history);
 		$instance->moveForward(0);	
 		$instance->moveForward(0);
 
 		$this->assertEquals(1, $instance->getVerticalPosition());	
-		$this->assertEquals($dilmasHistory[1][1], $instance->getContent());	
+		$this->assertEquals($dilmasHistory[0][0], $instance->getContent());	
 	}
 
 	public function testMoveBackwardWhenThereIsNoPreviousVerticalPositionShouldStayInTheSamePosition()
@@ -222,12 +218,13 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$dilmasHistory = [];
 		$dilmasHistory[] = [0 => 'Coloca esse dinheiro na poupança que a senhora ganha R$10 mil por mês'];
 
-		$history->method('offsetGet')->willReturn($dilmasHistory[0][0]);
+		$history->method('offsetGet')->willReturn($dilmasHistory[0]);
+		$history->method('offsetExists')->will($this->onConsecutiveCalls(false, true));
 
 		$instance = new InteractiveHistory($history);
 		$instance->moveBackward(0);
 		
-		$this->assertEquals(0, $instance->getVerticalPosition());		
+		$this->assertEquals(0, $instance->getVerticalPosition());
 		$this->assertEquals($dilmasHistory[0][0], $instance->getContent());	
 	}	
 }

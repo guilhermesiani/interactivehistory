@@ -54,22 +54,20 @@ class InteractiveHistory implements InteractiveHistoryInterface
 	
 	public function moveForward(int $horizontalPosition)
 	{
-		$this->horizontalPosition = $horizontalPosition;
-
 		$nextPosition = $this->verticalPosition + 1;
-
-		if ($this->history->offsetExists($nextPosition))		
+		if ($this->history->offsetExists($nextPosition)) {
 			$this->verticalPosition = $nextPosition;
+			$this->horizontalPosition = $horizontalPosition;
+		}		
 	}
 
 	public function moveBackward(int $horizontalPosition)
 	{
-		$this->horizontalPosition = $horizontalPosition;
-
 		$previousPosition = $this->verticalPosition - 1;
-
-		if ($this->history->offsetExists($previousPosition))		
+		if ($this->history->offsetExists($previousPosition)) {
 			$this->verticalPosition = $previousPosition;
+			$this->horizontalPosition = $horizontalPosition;
+		}	
 	}
 
 	public function getHorizontalPosition(): int
@@ -92,8 +90,9 @@ class InteractiveHistory implements InteractiveHistoryInterface
 
 	public function getPageOption(int $page, int $option): array
 	{
-		if (!isset($this->pageOptions[$page][$option]))
-			throw new OutOfRangeException('This page has no options to choose for the next horizontal page');
+		if (!isset($this->pageOptions[$page][$option])) {
+			throw new \OutOfRangeException('This page has no options to choose for the next horizontal page');
+		}
 
 		return $this->pageOptions[$page][$option];
 	}
