@@ -12,7 +12,6 @@ $connectorConf = new PostgreSQLConnectorConfig('localhost', 'interactivehistory'
 $db = (new PDOConnector($connectorConf))->getConnection();
 $sth = $db->query('SELECT * FROM history_content WHERE history_id = 1');
 
-
 // Setting into History object
 $history = new History();
 foreach ($sth->fetchAll(PDO::FETCH_ASSOC) as $historyData) {
@@ -30,7 +29,15 @@ foreach ($sth->fetchAll(PDO::FETCH_ASSOC) as $historyData) {
 }
 
 $interactiveHistory = new InteractiveHistory($history);
-echo $interactiveHistory->getContent(2, 0).PHP_EOL;
+echo $interactiveHistory->getContent().PHP_EOL;
+$interactiveHistory->moveForward(0);
+echo $interactiveHistory->getContent().PHP_EOL;
+$interactiveHistory->moveForward(0);
+echo $interactiveHistory->getContent().PHP_EOL;
+$interactiveHistory->moveForward(0);
+echo $interactiveHistory->getContent().PHP_EOL;
+$interactiveHistory->moveForward(0);
+echo $interactiveHistory->getContent().PHP_EOL;
 
 
 

@@ -227,4 +227,28 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(0, $instance->getVerticalPosition());
 		$this->assertEquals($dilmasHistory[0][0], $instance->getContent());	
 	}	
+
+	public function testMoveWithNonExistingHorizontalPositionShouldSetZeroAsDefault()
+	{
+		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+
+		$dilmasHistory = [];
+		$dilmasHistory[] = [0 => 'O desemprego beira 20%, ou seja, 1 em cada 4 portugueses.'];
+		$dilmasHistory[] = [0 => 'The end'];
+
+		$history->method('offsetExists')->will($this->onConsecutiveCalls(true, true));	
+		$history->method('offsetGet')->will(
+			$this->onConsecutiveCalls(
+				$dilmasHistory[1], 
+				$dilmasHistory[1],
+				$dilmasHistory[1]
+			)
+		);
+
+		$instance = new InteractiveHistory($history);
+		$instance->moveForward(1);
+
+		$this->assertEquals(1, $instance->getVerticalPosition());	
+		$this->assertEquals($dilmasHistory[1][0], $instance->getContent());	
+	}
 }

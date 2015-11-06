@@ -57,7 +57,7 @@ class InteractiveHistory implements InteractiveHistoryInterface
 		$nextPosition = $this->verticalPosition + 1;
 		if ($this->history->offsetExists($nextPosition)) {
 			$this->verticalPosition = $nextPosition;
-			$this->horizontalPosition = $horizontalPosition;
+			$this->setHorizontalPosition($horizontalPosition);
 		}		
 	}
 
@@ -66,9 +66,17 @@ class InteractiveHistory implements InteractiveHistoryInterface
 		$previousPosition = $this->verticalPosition - 1;
 		if ($this->history->offsetExists($previousPosition)) {
 			$this->verticalPosition = $previousPosition;
-			$this->horizontalPosition = $horizontalPosition;
+			$this->setHorizontalPosition($horizontalPosition);
 		}	
 	}
+
+	private function setHorizontalPosition(int $horizontalPosition)
+	{
+		$this->horizontalPosition = 0;
+		if (isset($this->history->offsetGet($this->verticalPosition)[$horizontalPosition])) {
+			$this->horizontalPosition = $horizontalPosition;
+		}
+	}	
 
 	public function getHorizontalPosition(): int
 	{
