@@ -2,4 +2,4 @@ language: php
 php:
   - 7
 
-script: phpunit --configuration phpunit.xml
+script: ./vendor/bin/phpunit --debug
