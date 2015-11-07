@@ -15,17 +15,6 @@ class InteractiveHistory implements InteractiveHistoryInterface
 	private $horizontalPosition = 0;
 	private $pageOptions = [];
 
-	// 	$arr = [
-	// 	0 => null, 
-	// 	1 => [
-	// 		0 => ['nextHorizontalPosition' => 0, 'optionText' => 'Some direction to select'], 
-	// 		1 => ['nextHorizontalPosition' => 1, 'optionText' => 'Another direction']
-	// 	], 
-	// 	2 => null, 
-	// 	3 => null, 
-	// 	4 => null
-	// ];
-
 	public function __construct(History $history)
 	{
 		$this->history = $history;
