@@ -4,11 +4,9 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL | E_STRICT);
 date_default_timezone_get('America/Sao_Paulo');
 
-define('DS', DIRECTORY_SEPARATOR);
-define('APP_ROOT', realpath(__DIR__.DS.'..'));
-
-$composer_autoload = APP_ROOT.DS.'vendor'.DS.'autoload.php';
-if (!file_exists($composer_autoload)) {
-	die('Please, fucking install composer. http://getcomposer.org');
+if (!@include __DIR__ . '/../vendor/autoload.php') {
+    die('You must set up the project dependencies, run the following commands:
+        wget http://getcomposer.org/composer.phar
+        php composer.phar install');
 }
 require $composer_autoload;
