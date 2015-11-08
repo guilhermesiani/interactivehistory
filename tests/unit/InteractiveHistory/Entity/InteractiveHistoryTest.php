@@ -1,6 +1,6 @@
 <?php
 
-use InteractiveHistory\Entity\InteractiveHistory;
+use InteractiveHistory\Entity\InteractiveHistory as InteractiveHistory;
 
 class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 {
