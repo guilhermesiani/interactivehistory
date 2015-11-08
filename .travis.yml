@@ -1,5 +1,12 @@
-language: php
+language: 
+	php
+
 php:
   - 7
 
-script: ./vendor/bin/phpunit tests
+before_script:
+  - composer self-update
+  - composer install --no-interaction --prefer-source
+
+script:
+	- vendor/bin/phpunit --configuration phpunit.xml.dist --colors --coverage-clover=coverage.clover
