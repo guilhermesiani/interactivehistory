@@ -3,7 +3,7 @@
 date_default_timezone_set('America/Sao_Paulo');
 
 // Sempre use barra (/) no final das URLs
-define('URL', 'https://shrouded-shelf-67372.herokuapp.com');
+define('URL', 'https://shrouded-shelf-67372.herokuapp.com/');
 define('LIBS', 'libs/');
 
 // Configuração com Banco de Dados
