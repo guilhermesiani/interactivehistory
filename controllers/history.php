@@ -18,6 +18,11 @@ class History extends \Libs\Controller
 	public function index($slug)
 	{
 		$this->view->history = $this->getHistory($slug);
+
+		if (isset($_POST['nextPage'])) {
+			$this->view->history->moveForward($_POST['nextHorizontalPosition'] ?? 0);
+		}
+
 		$this->view->render('history/index');
 	}
 

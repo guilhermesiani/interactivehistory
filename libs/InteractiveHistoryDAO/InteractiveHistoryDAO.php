@@ -35,18 +35,19 @@ class InteractiveHistoryDAO
 					$historyContentArray['v_position'], 
 					[$historyContentArray['h_position'] => $historyContentArray['content']]
 				);
+				$pages++;
 			} else {
 				$page = $history->offsetGet($historyContentArray['v_position']);
 				$page[$historyContentArray['h_position']] = $historyContentArray['content'];
 
 				$history->offsetSet($historyContentArray['v_position'], $page);
+				$pages--;
 			}
 			$sth = $db->query("SELECT * FROM history_option WHERE history_content_id = {$historyContentArray['history_content_id']}");
 			$optionsArray = $sth->fetchAll(\PDO::FETCH_ASSOC);
 			if (!empty($optionsArray)) {
 				$historyOptionsArray[$historyContentArray['v_position']] = $optionsArray;
 			}
-			$pages++;
 		}
 
 		$interactiveHistory = new InteractiveHistory($history);
