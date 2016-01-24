@@ -20,7 +20,7 @@ class Index extends \Libs\Controller
 	public function index()
 	{
 		// Getting history from database
-		$connectorConf = new PostgreSQLConnectorConfig('localhost', 'interactivehistory', 'guilhermesiani', '');
+		$connectorConf = new PostgreSQLConnectorConfig(DB_HOST, DB_NAME, DB_USER, DB_PASS);
 		$db = (new PDOConnector($connectorConf))->getConnection();
 		$sth = $db->query('SELECT history.history_id, history.title, history.slug FROM history
 			ORDER BY history.history_id DESC LIMIT 3');
