@@ -8,8 +8,8 @@ define('LIBS', 'libs/');
 
 // Configuração com Banco de Dados
 define('DB_TYPE', 'pgsql');
-define('DB_HOST', 'ec2-54-204-35-207.compute-1.amazonaws.com:5432');
-define('DB_NAME', 'd8c3c37jnpnctg');
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'hobby-dev');
 define('DB_USER', 'afgtyzbfzprnjq');
 define('DB_PASS', '3Tf4dZgvid5ANZQE3JuUFReGNl');
 
