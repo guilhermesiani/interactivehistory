@@ -1,7 +1,8 @@
 <?php
 namespace Controllers;
 
-use Libs;
+use Libs\InteractiveHistoryDAO\InteractiveHistoryDAO;
+use Libs\Session;
 
 /**
 * 
@@ -12,7 +13,7 @@ class History extends \Libs\Controller
 	function __construct()
 	{
 		parent::__construct();
-		Libs\Session::init();
+		Session::init();
 	}
 
 	public function index($slug)
@@ -28,15 +29,15 @@ class History extends \Libs\Controller
 
 	public function getNewHistorySession($slug) 
 	{
-		$interactiveHistoryDAO = new Libs\InteractiveHistoryDAO\InteractiveHistoryDAO();
-		Libs\Session::set('history', $interactiveHistoryDAO->getBySlug($slug));
+		$interactiveHistoryDAO = new InteractiveHistoryDAO();
+		Session::set('history', $interactiveHistoryDAO->getBySlug($slug));
 
-		return Libs\Session::get('history', Libs\Session::UNSERIALIZE);
+		return Session::get('history', Session::UNSERIALIZE);
 	}
 
 	public function getHistory($slug)
 	{
-		$history = Libs\Session::get('history', Libs\Session::UNSERIALIZE);
+		$history = Session::get('history', Session::UNSERIALIZE);
 		if (null === $history || $slug !== $history->getSlug()) {
 			return $this->getNewHistorySession($slug);
 		}
