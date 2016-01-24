@@ -27,4 +27,4 @@ define('IMG_SIZE', '1000000'); // Tamanho máximo do arquivo em bytes
 define('DS', DIRECTORY_SEPARATOR);
 define('APP_ROOT', realpath(__DIR__.DS));
 
-// https://shrouded-shelf-67372.herokuapp.co
+// https://shrouded-shelf-67372.herokuapp.com
