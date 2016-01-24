@@ -8,10 +8,10 @@ define('LIBS', 'libs/');
 
 // Configuração com Banco de Dados
 define('DB_TYPE', 'pgsql');
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'hobby-dev');
-define('DB_USER', 'afgtyzbfzprnjq');
-define('DB_PASS', '3Tf4dZgvid5ANZQE3JuUFReGNl');
+define('DB_HOST', 'ec2-54-197-224-155.compute-1.amazonaws.com');
+define('DB_NAME', 'd9t6vfbngfu0r4');
+define('DB_USER', 'xswjdizupkmude');
+define('DB_PASS', 'srZ59DLILkk_SYyNaMAp1HeWB2');
 
 // HASH KEY, nunca mude esta parte, pois é usada para as senhas!
 define('HASH_GENERAL_KEY', 'MixitUp200');
