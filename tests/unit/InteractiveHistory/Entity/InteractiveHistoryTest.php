@@ -1,6 +1,6 @@
 <?php
 
-use InteractiveHistory\Entity\InteractiveHistory;
+use Libs\InteractiveHistory\Entity\InteractiveHistory;
 
 class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,7 +10,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	public function assertPreConditions()
 	{
 		$this->assertTrue(
-			class_exists($class = 'InteractiveHistory\Entity\InteractiveHistory'),
+			class_exists($class = 'Libs\InteractiveHistory\Entity\InteractiveHistory'),
 			'Class not found: '.$class
 		);
 	}
@@ -33,13 +33,20 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testInstantiationWithAnInstanceOfHistoryOnConstructShouldWork()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 		$instance = new InteractiveHistory($history);
 	}	
 
+	public function testIfIsInstanceOfSplSubject()
+	{
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
+		$instance = new InteractiveHistory($history);
+		$this->assertInstanceOf('\SplSubject', $instance);		
+	}
+
 	public function testSetTitleWithValidArgumentShouldWork()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$instance = new InteractiveHistory($history);
 		$title 	  = 'Título da história';
@@ -47,9 +54,19 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($title, $instance->getTitle());
 	}
 
+	public function testSetSlugWithValidArgumentShouldWork()
+	{
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
+
+		$instance = new InteractiveHistory($history);
+		$slug 	  = 'an-slug-test';
+		$return   = $instance->setSlug($slug);
+		$this->assertEquals($slug, $instance->getSlug());
+	}	
+
 	public function testGetContentShouldReturnAText()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$dilmasHistory = [];
 		$dilmasHistory[] = [
@@ -73,7 +90,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetUndefinedOffsetShouldThrowOutOfRangeException()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$history->method('offsetExists')->will($this->onConsecutiveCalls(false));
 
@@ -83,7 +100,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetLastOffsetShouldReturnStringTheEnd()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$content = [];
 		$content[] = ['The end'];
@@ -98,7 +115,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testInstantiationShouldStartWithOneHorizontalAndVerticalPosition()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 		$instance = new InteractiveHistory($history);
 
 		$this->assertInternalType('int', $instance->getHorizontalPosition());			
@@ -109,7 +126,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testMoveForwardShouldSetNextIndexOfVerticalPosition()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 		$history->method('offsetExists')->will($this->onConsecutiveCalls(true, true));
 		$instance = new InteractiveHistory($history); // Starts with index 0 on VerticalPosition
 
@@ -122,7 +139,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testMoveBackwardShouldSetPreviousIndexOfVerticalPosition()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 		$history->method('offsetExists')->will($this->onConsecutiveCalls(true, true));		
 		$instance = new InteractiveHistory($history);
 
@@ -137,7 +154,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testSetPageOptionWithValidArgumentsForExistingPageShouldWork()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 		$history->offsetSet(1, 'Some valid argument');
 		$instance = new InteractiveHistory($history);
 
@@ -154,7 +171,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testGetPageOptionShouldReturnValidArrayAndKeys()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 		$history->offsetSet(1, 'Some valid argument');
 		$instance = new InteractiveHistory($history);
 
@@ -171,7 +188,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testHasOptionsForExistingPageShouldReturnTrueOrFalse()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 		$history->offsetSet(0, 'Some valid argument');
 		$history->offsetSet(1, 'Another valid argument');
 		$instance = new InteractiveHistory($history);
@@ -188,14 +205,14 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testGetOptionWithNonExistingValueShouldThrowAnException()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 		$instance = new InteractiveHistory($history);
 		$instance->getPageOption(0, 0);
 	}
 
 	public function testMoveForwardWhenThereIsNoNextVerticalPositionShouldStayInTheSamePosition()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$dilmasHistory = [];
 		$dilmasHistory[] = [0 => 'The end'];
@@ -213,7 +230,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testMoveBackwardWhenThereIsNoPreviousVerticalPositionShouldStayInTheSamePosition()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$dilmasHistory = [];
 		$dilmasHistory[] = [0 => 'Coloca esse dinheiro na poupança que a senhora ganha R$10 mil por mês'];
@@ -230,7 +247,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 	public function testMoveWithNonExistingHorizontalPositionShouldSetZeroAsDefault()
 	{
-		$history = $this->getMockBuilder('History\Entity\History')->getMock();
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$dilmasHistory = [];
 		$dilmasHistory[] = [0 => 'O desemprego beira 20%, ou seja, 1 em cada 4 portugueses.'];
@@ -250,5 +267,43 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals(1, $instance->getVerticalPosition());	
 		$this->assertEquals($dilmasHistory[1][0], $instance->getContent());	
+	}
+
+	public function testSetPagesShouldReceiveArgumentOfTypeInt() 
+	{
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
+		$instance = new InteractiveHistory($history);	
+		$instance->setPages(12);
+		$this->assertEquals(12, $instance->getPages());
+	}
+
+	/**
+	 * @expectedException TypeError
+	 * @dataProvider providerInvalidArgumentForSetPages
+	 */
+	public function testSetPagesWithInvalidArgumentShouldThrowAnException($param)
+	{
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
+		$instance = new InteractiveHistory($history);	
+		$instance->setPages($param);
+	}
+
+	/**
+	 * @expectedException \OutOfRangeException
+	 */
+	public function testSetPagesWithIntLessThanOneShouldThrowAnException() 
+	{
+		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
+		$instance = new InteractiveHistory($history);	
+		$instance->setPages(-3);
+	}
+
+	public function providerInvalidArgumentForSetPages()
+	{
+		return [
+			['test'],
+			[new ArrayObject],
+			[[]]
+		];
 	}
 }
