@@ -1,1 +1,5 @@
 /vendor/
+.htaccess
+composer.lock
+composer.phar
+config.php
