@@ -15,7 +15,7 @@ class InteractiveHistoryDAO
 	public function getBySlug(string $slug): InteractiveHistory
 	{
 		// Getting history from database
-		$connectorConf = new PostgreSQLConnectorConfig('localhost', 'interactivehistory', 'guilhermesiani', '');
+		$connectorConf = new PostgreSQLConnectorConfig(DB_HOST, DB_NAME, DB_USER, DB_PASS);
 		$db = (new PDOConnector($connectorConf))->getConnection();
 		$sth = $db->prepare('SELECT * FROM history WHERE slug = :slug');
 		$sth->bindValue(':slug', $slug);
