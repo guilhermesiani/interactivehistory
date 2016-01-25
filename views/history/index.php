@@ -5,7 +5,7 @@
 <div class="center">
 	<article id="history">
 		<p><?php echo $this->history->getContent(); ?></p>
-		<form method="POST" action="<?= URL; ?>history/<?= $this->history->getSlug(); ?>">
+		<form method="POST" action="<?= URL; ?>history/<?= $this->history->getSlug(); ?>/<?= ($this->history->getVerticalPosition() + 2) ?>">
 			<?php if ($this->history->pageHasOptions($this->history->getVerticalPosition())): ?>
 				<div class="history-options">
 					<span>
