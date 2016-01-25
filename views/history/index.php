@@ -1,6 +1,6 @@
 <header class="main">
 	<a href="<?php echo URL; ?>" id="home-button">Início</a>
-	<a href="" id="title"><h1><?php echo $this->history->getTitle(); ?></h1></a>
+	<a href="<?= URL; ?>history/<?= $this->history->getSlug(); ?>/<?= ($this->history->getVerticalPosition() + 1) ?>" id="title"><h1><?php echo $this->history->getTitle(); ?></h1></a>
 </header>
 <div class="center">
 	<article id="history">
