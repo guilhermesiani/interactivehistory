@@ -33,12 +33,12 @@ class InteractiveHistoryDAO
 			if (!$history->offsetExists($historyContentArray['v_position'])) {
 				$history->offsetSet(
 					$historyContentArray['v_position'], 
-					[$historyContentArray['h_position'] => $historyContentArray['content']]
+					[$historyContentArray['h_position'] => ['content' => $historyContentArray['content']]]
 				);
 				$pages++;
 			} else {
 				$page = $history->offsetGet($historyContentArray['v_position']);
-				$page[$historyContentArray['h_position']] = $historyContentArray['content'];
+				$page[$historyContentArray['h_position']] = ['content' => $historyContentArray['content']];
 
 				$history->offsetSet($historyContentArray['v_position'], $page);
 				$pages--;

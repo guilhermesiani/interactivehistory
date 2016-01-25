@@ -6,9 +6,24 @@ use Libs\History\Entity\History;
 use Libs\InteractiveHistory\Entity\InteractiveHistory;
 
 $history = new History();
-$history->offsetSet(0, [0 => 'Era uma vez...']);
-$history->offsetSet(1, [0 => 'era outra vez...']);
-$history->offsetSet(2, [0 => '...continuacao...']);
+$history->offsetSet(0, [
+	0 => [
+		'content' => 'Era uma vez...',
+		'nextHorizontalPosition' => 0
+	]
+]);
+$history->offsetSet(1, [
+	0 => [
+		'content' => 'era outra vez...',
+		'nextHorizontalPosition' => 0
+	]
+]);
+$history->offsetSet(2, [
+	0 => [
+		'content' => '...continuacao...',
+		'nextHorizontalPosition' => 0
+	]
+]);
 
 $interactiveHistory = new InteractiveHistory($history);
 $interactiveHistory->setPageOption(1, 0, 'Quero continuar');

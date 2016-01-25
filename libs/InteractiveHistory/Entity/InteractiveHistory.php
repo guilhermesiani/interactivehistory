@@ -62,10 +62,10 @@ class InteractiveHistory implements InteractiveHistoryInterface, \SplSubject
 		if (!$this->history->offsetExists($this->verticalPosition))
 			throw new \OutOfRangeException('History page not found');
 
-		if (!isset($this->history->offsetGet($this->verticalPosition)[$this->horizontalPosition]))
+		if (!isset($this->history->offsetGet($this->verticalPosition)[$this->horizontalPosition]['content']))
 			throw new \OutOfRangeException('History variant page not found');
 
-		return $this->history->offsetGet($this->verticalPosition)[$this->horizontalPosition];
+		return $this->history->offsetGet($this->verticalPosition)[$this->horizontalPosition]['content'];
 	}
 	
 	public function moveForward(int $horizontalPosition)
@@ -91,7 +91,7 @@ class InteractiveHistory implements InteractiveHistoryInterface, \SplSubject
 	private function setHorizontalPosition(int $horizontalPosition)
 	{
 		$this->horizontalPosition = 0;
-		if (isset($this->history->offsetGet($this->verticalPosition)[$horizontalPosition])) {
+		if (isset($this->history->offsetGet($this->verticalPosition)[$horizontalPosition]['content'])) {
 			$this->horizontalPosition = $horizontalPosition;
 		}
 		$this->notify();

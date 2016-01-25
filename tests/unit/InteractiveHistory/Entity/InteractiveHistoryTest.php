@@ -70,10 +70,13 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 
 		$dilmasHistory = [];
 		$dilmasHistory[] = [
-			1 => 'Se hoje é o dia das crianças... Ontem eu disse: o dia da criança é o dia da mãe, 
-			dos pais, das professoras, mas também é o dia dos animais, sempre que você olha 
-			uma criança, há sempre uma figura oculta, que é um cachorro atrás. O que é algo 
-			muito importante!'
+				1 => [
+					'content' => 'Se hoje é o dia das crianças... Ontem eu disse: o dia da criança é o dia da mãe, 
+					dos pais, das professoras, mas também é o dia dos animais, sempre que você olha 
+					uma criança, há sempre uma figura oculta, que é um cachorro atrás. O que é algo 
+					muito importante!',
+					'nextHorizontalPosition' => 0
+			]
 		];
 
 		$history->method('offsetExists')->willReturn(true);
@@ -82,7 +85,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$interactiveHistory = new InteractiveHistory($history);
 		$interactiveHistory->moveForward(1);
 		$this->assertInternalType('string', $interactiveHistory->getContent());
-		$this->assertEquals($dilmasHistory[0][1], $interactiveHistory->getContent());		
+		$this->assertEquals($dilmasHistory[0][1]['content'], $interactiveHistory->getContent());		
 	}
 
 	/**
@@ -103,14 +106,19 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$content = [];
-		$content[] = ['The end'];
+		$content[] = [
+			0 => [
+				'content' => 'The end',
+				'nextHorizontalPosition' => 0
+			]
+		];
 
 		$history->method('offsetExists')->willReturn(true);
 		$history->method('offsetGet')->willReturn($content[0]);
 
 		$interactiveHistory = new InteractiveHistory($history);
 		$this->assertInternalType('string', $interactiveHistory->getContent(0, 0));
-		$this->assertEquals($content[0][0], $interactiveHistory->getContent(0, 0));
+		$this->assertEquals($content[0][0]['content'], $interactiveHistory->getContent(0, 0));
 	}
 
 	public function testInstantiationShouldStartWithOneHorizontalAndVerticalPosition()
@@ -155,7 +163,10 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	public function testSetPageOptionWithValidArgumentsForExistingPageShouldWork()
 	{
 		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
-		$history->offsetSet(1, 'Some valid argument');
+		$history->offsetSet(1, [
+			'content' => 'Some valid argument',
+			'nextHorizontalPosition' => 0
+		]);
 		$instance = new InteractiveHistory($history);
 
 		$optionsText = [
@@ -172,7 +183,10 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	public function testGetPageOptionShouldReturnValidArrayAndKeys()
 	{
 		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
-		$history->offsetSet(1, 'Some valid argument');
+		$history->offsetSet(1, [
+			'content' => 'Some valid argument',
+			'nextHorizontalPosition' => 0
+		]);
 		$instance = new InteractiveHistory($history);
 
 		$optionsText = [
@@ -189,8 +203,14 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	public function testHasOptionsForExistingPageShouldReturnTrueOrFalse()
 	{
 		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
-		$history->offsetSet(0, 'Some valid argument');
-		$history->offsetSet(1, 'Another valid argument');
+		$history->offsetSet(0, [
+			'content' => 'Some valid argument',
+			'nextHorizontalPosition' => 0
+		]);
+		$history->offsetSet(1, [
+			'content' => 'Another valid argument',
+			'nextHorizontalPosition' => 0
+		]);
 		$instance = new InteractiveHistory($history);
 		$instance->setPageOption(1, 0, 'Some option');
 
@@ -215,7 +235,11 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$dilmasHistory = [];
-		$dilmasHistory[] = [0 => 'The end'];
+		$dilmasHistory[] = [0 => [
+				'content' => 'The end',
+				'nextHorizontalPosition' => 0
+			]
+		];
 
 		$history->method('offsetExists')->will($this->onConsecutiveCalls(true, false, true));	
 		$history->method('offsetGet')->willReturn($dilmasHistory[0]);
@@ -225,7 +249,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$instance->moveForward(0);
 
 		$this->assertEquals(1, $instance->getVerticalPosition());	
-		$this->assertEquals($dilmasHistory[0][0], $instance->getContent());	
+		$this->assertEquals($dilmasHistory[0][0]['content'], $instance->getContent());	
 	}
 
 	public function testMoveBackwardWhenThereIsNoPreviousVerticalPositionShouldStayInTheSamePosition()
@@ -233,7 +257,12 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$dilmasHistory = [];
-		$dilmasHistory[] = [0 => 'Coloca esse dinheiro na poupança que a senhora ganha R$10 mil por mês'];
+		$dilmasHistory[] = [
+			0 => [
+				'content' => 'Coloca esse dinheiro na poupança que a senhora ganha R$10 mil por mês',
+				'nextHorizontalPosition' => 0
+			]
+		];
 
 		$history->method('offsetGet')->willReturn($dilmasHistory[0]);
 		$history->method('offsetExists')->will($this->onConsecutiveCalls(false, true));
@@ -242,7 +271,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$instance->moveBackward(0);
 		
 		$this->assertEquals(0, $instance->getVerticalPosition());
-		$this->assertEquals($dilmasHistory[0][0], $instance->getContent());	
+		$this->assertEquals($dilmasHistory[0][0]['content'], $instance->getContent());	
 	}	
 
 	public function testMoveWithNonExistingHorizontalPositionShouldSetZeroAsDefault()
@@ -250,8 +279,18 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 
 		$dilmasHistory = [];
-		$dilmasHistory[] = [0 => 'O desemprego beira 20%, ou seja, 1 em cada 4 portugueses.'];
-		$dilmasHistory[] = [0 => 'The end'];
+		$dilmasHistory[] = [
+			0 => [
+				'content' => 'O desemprego beira 20%, ou seja, 1 em cada 4 portugueses.',
+				'nextHorizontalPosition' => 0
+			]
+		];
+		$dilmasHistory[] = [
+			0 => [
+				'content' => 'The end',
+				'nextHorizontalPosition' => 0
+			]
+		];
 
 		$history->method('offsetExists')->will($this->onConsecutiveCalls(true, true));	
 		$history->method('offsetGet')->will(
@@ -266,7 +305,12 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 		$instance->moveForward(1);
 
 		$this->assertEquals(1, $instance->getVerticalPosition());	
-		$this->assertEquals($dilmasHistory[1][0], $instance->getContent());	
+		$this->assertEquals($dilmasHistory[1][0]['content'], $instance->getContent());	
+	}
+
+	public function testGetNextHorizontalPositionShouldReturnAnIntOfAnExistingPage()
+	{
+
 	}
 
 	public function testSetPagesShouldReceiveArgumentOfTypeInt() 
