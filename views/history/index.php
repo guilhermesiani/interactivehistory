@@ -30,12 +30,12 @@
 			<ul>
 				<?php for ($i = 0; $i < $this->history->getPages(); $i++): ?>
 					<?php if ($i < $this->history->getVerticalPosition()): ?>
-						<li><a href="#"><s>Página <?php echo ($i+1); ?></s></a></li>
+						<li><a href="<?= URL; ?>history/<?= $this->history->getSlug(); ?>/<?= ($i+1) ?>"><s>Página <?php echo ($i+1); ?></s></a></li>
 					<?php else: ?>
-						<li><a href="#">Página <?php echo ($i+1); ?></a></li>
+						<li><a href="<?= URL; ?>history/<?= $this->history->getSlug(); ?>/<?= ($i+1) ?>">Página <?php echo ($i+1); ?></a></li>
 					<?php endif; ?>
 				<?php endfor; ?>
-				<li><a href="#">Fim</a></li>
+				<li><a href="<?= URL; ?>history/<?= $this->history->getSlug(); ?>/1">Fim</a></li>
 			</ul>
 		</nav>
 	</aside>	
