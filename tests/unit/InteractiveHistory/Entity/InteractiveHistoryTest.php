@@ -174,10 +174,10 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 			'Another option',
 		];
 
-		$instance->setPageOption(1, 0, $optionsText[0]);
-		$instance->setPageOption(1, 1, $optionsText[1]);
-		$this->assertEquals($optionsText[0], $instance->getPageOption(1, 0)['optionText']);
-		$this->assertEquals($optionsText[1], $instance->getPageOption(1, 1)['optionText']);
+		$instance->setPageOption(1, 0, 0, $optionsText[0]);
+		$instance->setPageOption(1, 0, 1, $optionsText[1]);
+		$this->assertEquals($optionsText[0], $instance->getPageOption(1, 0, 0)['optionText']);
+		$this->assertEquals($optionsText[1], $instance->getPageOption(1, 0, 1)['optionText']);
 	}	
 
 	public function testGetPageOptionShouldReturnValidArrayAndKeys()
@@ -194,10 +194,10 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 			'Another option',
 		];
 
-		$instance->setPageOption(1, 0, $optionsText[0]);
-		$instance->setPageOption(1, 1, $optionsText[1]);
-		$this->assertArrayHasKey('nextHorizontalPosition', $instance->getPageOption(1, 0));
-		$this->assertArrayHasKey('optionText', $instance->getPageOption(1, 1));
+		$instance->setPageOption(1, 0, 0, $optionsText[0]);
+		$instance->setPageOption(1, 0, 1, $optionsText[1]);
+		$this->assertArrayHasKey('nextHorizontalPosition', $instance->getPageOption(1, 0, 0));
+		$this->assertArrayHasKey('optionText', $instance->getPageOption(1, 0, 1));
 	}
 
 	public function testHasOptionsForExistingPageShouldReturnTrueOrFalse()
@@ -212,12 +212,12 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 			'nextHorizontalPosition' => 0
 		]);
 		$instance = new InteractiveHistory($history);
-		$instance->setPageOption(1, 0, 'Some option');
+		$instance->setPageOption(1, 0, 0, 'Some option');
 
-		$this->assertInternalType('bool', $instance->pageHasOptions(0));
-		$this->assertInternalType('bool', $instance->pageHasOptions(1));
-		$this->assertFalse($instance->pageHasOptions(0));
-		$this->assertTrue($instance->pageHasOptions(1));
+		$this->assertInternalType('bool', $instance->pageHasOptions(0, 0));
+		$this->assertInternalType('bool', $instance->pageHasOptions(1, 0));
+		$this->assertFalse($instance->pageHasOptions(0, 0));
+		$this->assertTrue($instance->pageHasOptions(1, 0));
 	}
 
 	/**
@@ -227,7 +227,7 @@ class InteractiveHistoryTest extends \PHPUnit_Framework_TestCase
 	{
 		$history = $this->getMockBuilder('Libs\History\Entity\History')->getMock();
 		$instance = new InteractiveHistory($history);
-		$instance->getPageOption(0, 0);
+		$instance->getPageOption(0, 0, 0);
 	}
 
 	public function testMoveForwardWhenThereIsNoNextVerticalPositionShouldStayInTheSamePosition()

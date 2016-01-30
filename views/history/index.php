@@ -6,15 +6,15 @@
 	<article id="history">
 		<p><?php echo $this->history->getContent(); ?></p>
 		<form method="POST" action="<?= URL; ?>history/<?= $this->history->getSlug(); ?>/<?= ($this->history->getVerticalPosition() + 2) ?>">
-			<?php if ($this->history->pageHasOptions($this->history->getVerticalPosition())): ?>
+			<?php if ($this->history->pageHasOptions($this->history->getVerticalPosition(), $this->history->getHorizontalPosition())): ?>
 				<div class="history-options">
 					<span>
-						<input type="radio" name="nextHorizontalPosition" value="0"> 
-						<?= $this->history->getPageOption($this->history->getVerticalPosition(), 0)['optionText'] ?>
+						<input type="radio" name="nextHorizontalPosition" value="<?= $this->history->getPageOption($this->history->getVerticalPosition(), $this->history->getHorizontalPosition(), 0)['nextHorizontalPosition'] ?>"> 
+						<?= $this->history->getPageOption($this->history->getVerticalPosition(), $this->history->getHorizontalPosition(), 0)['optionText'] ?>
 					</span>
 					<span>
-						<input type="radio" name="nextHorizontalPosition" value="1"> 
-						<?= $this->history->getPageOption($this->history->getVerticalPosition(), 1)['optionText'] ?>
+						<input type="radio" name="nextHorizontalPosition" value="<?= $this->history->getPageOption($this->history->getVerticalPosition(), $this->history->getHorizontalPosition(), 1)['nextHorizontalPosition'] ?>"> 
+						<?= $this->history->getPageOption($this->history->getVerticalPosition(), $this->history->getHorizontalPosition(), 1)['optionText'] ?>
 					</span>
 				</div>
 			<?php endif; ?>

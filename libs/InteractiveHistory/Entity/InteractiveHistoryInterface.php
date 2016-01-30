@@ -11,8 +11,13 @@ interface InteractiveHistoryInterface
 	public function moveBackward(int $horizontalPosition);
 	public function getHorizontalPosition(): int;
 	public function getVerticalPosition(): int;
-	public function setPageOption(int $page, int $nextHorizontalPosition, string $optionText);
-	public function getPageOption(int $page, int $option): array;
+	public function setPageOption(
+		int $page, 
+		int $horizontalPosition, 
+		int $nextHorizontalPosition, 
+		string $optionText
+	);
+	public function getPageOption(int $page, int $horizontalPosition, int $option): array;
 	public function getPageOptions(): array;
-	public function pageHasOptions(int $page): bool;
+	public function pageHasOptions(int $page, int $horizontalPosition): bool;
 }

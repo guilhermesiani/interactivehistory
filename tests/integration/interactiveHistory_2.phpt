@@ -26,18 +26,19 @@ $history->offsetSet(2, [
 ]);
 
 $interactiveHistory = new InteractiveHistory($history);
-$interactiveHistory->setPageOption(1, 0, 'Quero continuar');
-$interactiveHistory->setPageOption(1, 1, 'Nao quero continuar');
+$interactiveHistory->setPageOption(1, 0, 0, 'Quero continuar');
+$interactiveHistory->setPageOption(1, 0, 1, 'Nao quero continuar');
 
 $interactiveHistory->moveForward(0);
 if ($interactiveHistory->pageHasOptions(
-	$interactiveHistory->getVerticalPosition()
+	$interactiveHistory->getVerticalPosition(),
+	0
 )) {
 	echo $interactiveHistory->getPageOption(
-		$interactiveHistory->getVerticalPosition(), 0)['optionText'];
+		$interactiveHistory->getVerticalPosition(), 0, 0)['optionText'];
 	echo PHP_EOL;
 	echo $interactiveHistory->getPageOption(
-		$interactiveHistory->getVerticalPosition(), 1)['optionText'];
+		$interactiveHistory->getVerticalPosition(), 0, 1)['optionText'];
 }
 echo PHP_EOL;
 $interactiveHistory->moveForward(0);

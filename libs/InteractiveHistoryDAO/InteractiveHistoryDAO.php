@@ -25,7 +25,7 @@ class InteractiveHistoryDAO
 
 		$sth = $db->query("SELECT * FROM history_content WHERE history_id = {$historyArray['history_id']}");
 		$historyContentsArray = $sth->fetchAll(\PDO::FETCH_ASSOC);
-		
+
 		$history = new History();
 		$historyOptionsArray = [];
 		$pages = 0;
@@ -33,19 +33,27 @@ class InteractiveHistoryDAO
 			if (!$history->offsetExists($historyContentArray['v_position'])) {
 				$history->offsetSet(
 					$historyContentArray['v_position'], 
-					[$historyContentArray['h_position'] => ['content' => $historyContentArray['content']]]
+					[$historyContentArray['h_position'] => [
+							'content' => $historyContentArray['content'],
+							'nextHorizontalPosition' => $historyContentArray['next_h_position']
+						]
+					]
 				);
 				$pages++;
 			} else {
 				$page = $history->offsetGet($historyContentArray['v_position']);
-				$page[$historyContentArray['h_position']] = ['content' => $historyContentArray['content']];
+				$page[$historyContentArray['h_position']] = [
+					'content' => $historyContentArray['content'],
+					'nextHorizontalPosition' => $historyContentArray['next_h_position']
+				];
 
 				$history->offsetSet($historyContentArray['v_position'], $page);
-				$pages--;
 			}
-			$sth = $db->query("SELECT * FROM history_option WHERE history_content_id = {$historyContentArray['history_content_id']}");
+			$sth = $db->query("SELECT * FROM history_option 
+				WHERE history_content_id = {$historyContentArray['history_content_id']}");
 			$optionsArray = $sth->fetchAll(\PDO::FETCH_ASSOC);
 			if (!empty($optionsArray)) {
+				$horizontalPositions[$historyContentArray['v_position']] = (int) $historyContentArray['h_position'];
 				$historyOptionsArray[$historyContentArray['v_position']] = $optionsArray;
 			}
 		}
@@ -58,7 +66,12 @@ class InteractiveHistoryDAO
 
 		foreach ($historyOptionsArray as $key => $options) {
 			foreach ($options as $option) {
-				$interactiveHistory->setPageOption($key, $option['next_h_position'], $option['option']);
+				$interactiveHistory->setPageOption(
+					$key, 
+					$horizontalPositions[$key], 
+					$option['next_h_position'], 
+					$option['option']
+				);
 			}
 		}
 
@@ -76,7 +89,8 @@ class InteractiveHistoryDAO
 		$histories = $sth->fetchAll(\PDO::FETCH_ASSOC);
 
 		foreach ($histories as $key => $value) {
-			$sth = $db->query('SELECT content FROM history_content WHERE history_id = '.$value['history_id'].' ORDER BY history_content_id ASC');
+			$sth = $db->query('SELECT content FROM history_content 
+				WHERE history_id = '.$value['history_id'].' ORDER BY history_content_id ASC');
 			$result = $sth->fetch(\PDO::FETCH_ASSOC);	
 			$histories[$key]['content'] = $result['content'] ?? '';
 		}

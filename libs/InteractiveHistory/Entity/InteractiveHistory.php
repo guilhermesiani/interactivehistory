@@ -67,6 +67,13 @@ class InteractiveHistory implements InteractiveHistoryInterface, \SplSubject
 
 		return $this->history->offsetGet($this->verticalPosition)[$this->horizontalPosition]['content'];
 	}
+
+	public function getNextHorizontalPosition() {
+		if (!isset($this->history->offsetGet($this->verticalPosition)[$this->horizontalPosition]['nextHorizontalPosition']))
+			throw new \OutOfRangeException('History variant page not found');
+
+		return $this->history->offsetGet($this->verticalPosition)[$this->horizontalPosition]['nextHorizontalPosition'];
+	}
 	
 	public function moveForward(int $horizontalPosition)
 	{
@@ -107,21 +114,25 @@ class InteractiveHistory implements InteractiveHistoryInterface, \SplSubject
 		return $this->verticalPosition;
 	}
 
-	public function setPageOption(int $page, int $nextHorizontalPosition, string $optionText)
-	{
-		$this->pageOptions[$page][] = [
+	public function setPageOption(
+		int $page, 
+		int $horizontalPosition, 
+		int $nextHorizontalPosition, 
+		string $optionText
+	) {
+		$this->pageOptions[$page][$horizontalPosition][] = [
 			'nextHorizontalPosition' 	=> $nextHorizontalPosition,
 			'optionText' 				=> $optionText,
 		];
 	}
 
-	public function getPageOption(int $page, int $option): array
+	public function getPageOption(int $page, int $horizontalPosition, int $option): array
 	{
-		if (!isset($this->pageOptions[$page][$option])) {
+		if (!isset($this->pageOptions[$page][$horizontalPosition][$option])) {
 			throw new \OutOfRangeException('This page has no options to choose for the next horizontal page');
 		}
 
-		return $this->pageOptions[$page][$option];
+		return $this->pageOptions[$page][$horizontalPosition][$option];
 	}
 
 	public function getPageOptions(): array
@@ -129,9 +140,9 @@ class InteractiveHistory implements InteractiveHistoryInterface, \SplSubject
 		return $this->pageOptions;
 	}	
 
-	public function pageHasOptions(int $page): bool
+	public function pageHasOptions(int $page, int $horizontalPosition): bool
 	{
-		if (!empty($this->pageOptions[$page]))
+		if (!empty($this->pageOptions[$page][$horizontalPosition]))
 			return true;
 
 		return false;

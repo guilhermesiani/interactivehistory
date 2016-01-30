@@ -22,7 +22,7 @@ class History extends \Libs\Controller
 		$this->view->history = $this->getHistory($slug);
 
 		if (isset($_POST['nextPage'])) {
-			$this->view->history->moveForward($_POST['nextHorizontalPosition'] ?? 0);
+			$this->view->history->moveForward($_POST['nextHorizontalPosition'] ?? $this->view->history->getNextHorizontalPosition());
 		} else if ($this->view->history->getVerticalPosition() > ($page - 1)) {
 			for ($i = $this->view->history->getVerticalPosition(); $i > ($page - 1); $i--) {
 				$this->view->history->moveBackward(0);
