@@ -35,7 +35,7 @@
 						<li><a href="<?= URL; ?>history/<?= $this->history->getSlug(); ?>/<?= ($i+1) ?>">Página <?php echo ($i+1); ?></a></li>
 					<?php endif; ?>
 				<?php endfor; ?>
-				<li><a href="<?= URL; ?>history/<?= $this->history->getSlug(); ?>/1">Fim</a></li>
+				<li><a href="<?= URL; ?>history/<?= $this->history->getSlug(); ?>/1">Créditos</a></li>
 			</ul>
 		</nav>
 	</aside>	

@@ -13,7 +13,7 @@ date_default_timezone_set('America/Sao_Paulo');
 // define('DB_USER', 'guilhermesiani');
 // define('DB_PASS', '');
 
-// Sempre use barra (/) no final das URLs
+// // Sempre use barra (/) no final das URLs
 define('URL', 'https://shrouded-shelf-67372.herokuapp.com/');
 define('LIBS', 'libs/');
 
